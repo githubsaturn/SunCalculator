@@ -1,6 +1,6 @@
 #include "AppManager.h"
 #include "AppConstants.h"
-#include "SliderControl.h"
+#include "LayerMain.h"
 
 USING_NS_CC;
 
@@ -87,9 +87,8 @@ void AppManager::runScene(int scenceID) {
 
 	if (scenceID == kSceneSplash) {
 
-		SliderControl * sp = SliderControl::create();
-		sp->setPosition(300, 300);
-		mainNode->addChild(sp, 10);
+		auto layerMain = LayerMain::create();
+		mainNode->addChild(layerMain, 10);
 
 	} else if (scenceID == kSceneMain) {
 
