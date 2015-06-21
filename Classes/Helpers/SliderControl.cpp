@@ -42,12 +42,17 @@ void SliderControl::setupSlider() {
 	bar->setScale(k);
 
 	hub = Sprite::create("sliderhub.png");
-	hub->setScale(s.height * 2.5 / hub->getContentSize().height);
+	Sprite* hubCore = Sprite::create("sliderhub.png");
+	hubCore->setPosition(hub->getContentSize() * 0.5);
+	hubCore->setScale(0.7);
+	hub->addChild(hubCore);
+	hubScale = s.height * 3.5 / hub->getContentSize().height;
+	hub->setScale(hubScale);
 
 	this->addChild(bar, 10);
 	this->addChild(hub, 20);
-	bar->setColor(color);
-	hub->setColor(Color3B(color.r * 0.5, color.g * 0.5, color.b * 0.5));
+	bar->setColor(Color3B(160, 160, 160));
+	hub->setColor(color);
 
 	xLimit = size.width * 0.5 - size.height * 1.5;
 
@@ -75,8 +80,11 @@ bool SliderControl::onTouchBegan(Touch *touch, Event *unused_event) {
 	float newX = this->convertTouchToNodeSpace(touch).x;
 	float newY = this->convertTouchToNodeSpace(touch).y;
 
-	if ((abs(newX) < size.width * 0.5) && (abs(newY) < size.height * 4))
+	if ((abs(newX) < size.width * 0.5) && (abs(newY) < size.height * 4)) {
 		listener->setSwallowTouches(true);
+		hub->stopAllActions();
+		hub->runAction(EaseSineOut::create(ScaleTo::create(0.2f, hubScale * 1.7)));
+	}
 
 	return true;
 }
@@ -103,6 +111,8 @@ void SliderControl::onTouchEnded(Touch *touch, Event *unused_event) {
 		return;
 
 	listener->setSwallowTouches(false);
+	hub->stopAllActions();
+	hub->runAction(EaseSineOut::create(ScaleTo::create(0.2f, hubScale)));
 
 }
 

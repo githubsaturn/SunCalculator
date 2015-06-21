@@ -23,6 +23,7 @@ private:
 	EventListenerTouchOneByOne* listener;
 	Sprite* hub;
 	float xLimit;
+	float hubScale;
 	Color3B color;
 
 };
