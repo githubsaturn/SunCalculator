@@ -1,7 +1,6 @@
 #include "AppManager.h"
 #include "AppConstants.h"
 #include "LayerMain.h"
-#include "SliderControl.h"
 
 USING_NS_CC;
 LayerMain *LayerMain::pInstance = NULL;
@@ -15,6 +14,8 @@ bool LayerMain::init() {
 	}
 
 	pInstance = this;
+
+	this->schedule(CC_SCHEDULE_SELECTOR(LayerMain::updateValues));
 
 	Size visibleSize = AppManager::getInstance()->getVisibleSize();
 	Point origin = AppManager::getInstance()->getOrigin();
@@ -35,24 +36,165 @@ bool LayerMain::init() {
 	Sprite* countries = Sprite::create("countries_.png");
 	countries->setAnchorPoint(Vec2(-0.1, 1.2));
 	countries->setPosition(0, h);
-	countries->setScale(h * 0.4 / countries->getContentSize().height);
+	countries->setScale(
+			scalingHeight * 0.4 / countries->getContentSize().height);
 	countries->setOpacity(73);
 	this->addChild(countries, 1);
 
-	Sprite* star = Sprite::create("star.png");
+	star = Sprite::create("star.png");
 	star->setPosition(countries->getContentSize() * 0.5);
 	star->setScale(
 			countries->getContentSize().height * 0.05
 					/ star->getContentSize().height);
 	countries->addChild(star, 1);
 
+	float fontSize = scalingHeight * 0.06;
+
+	Label* lLoc = Label::createWithTTF("Latitude    Longitude",
+			"fonts/trench100free.otf", fontSize);
+	lLoc->setTextColor(Color4B::BLACK);
+	lLoc->setAnchorPoint(Vec2(0.5, 0.5));
+	lLoc->enableOutline(Color4B::BLACK, fontSize * 0.05);
+	lLoc->setPosition(w * 0.5 - scalingHeight * 0.5,
+			h * 0.5 + scalingHeight * 0.0);
+	this->addChild(lLoc, 1);
+
+	Color3B longColor(255, 32, 32);
+	Color3B latColor(22, 196, 52);
+	Color3B timeColor(22, 131, 196);
+	Color3B dateColor(239, 32, 155);
+
 	Sprite* platform = Sprite::create("platform.png");
-	platform->setAnchorPoint(Vec2(1.5, 1.3));
-	platform->setPosition(w, h);
-	platform->setScale(h * 0.4 / platform->getContentSize().height);
+	platform->setPosition(w - scalingHeight * 0.3,
+			h * 0.5 + scalingHeight * 0.2);
+	platform->setScale(scalingHeight * 0.4 / platform->getContentSize().height);
 	this->addChild(platform, 1);
 
-	Sprite* shadow = Sprite::create("shadow.png");
+	{ // latitude
+		Sprite* textBg = Sprite::create("text_bg.png");
+		textBg->setScale(scalingHeight * 0.1 / textBg->getContentSize().height);
+		textBg->setColor(latColor);
+		textBg->setPosition(scalingHeight * 0.4, h * 0.5 - scalingHeight * 0.2);
+		this->addChild(textBg, 1);
+		textBg->setOpacity(138);
+
+		Label* l = Label::createWithTTF("45.0", "fonts/trench100free.otf",
+				fontSize);
+		l->setTextColor(Color4B::BLACK);
+		l->enableOutline(Color4B::BLACK, fontSize * 0.05);
+		l->setPosition(textBg->getPosition());
+		this->addChild(l, 2);
+	}
+
+	{ // Longitude
+		Sprite* textBg = Sprite::create("text_bg.png");
+		textBg->setScale(scalingHeight * 0.1 / textBg->getContentSize().height);
+		textBg->setColor(longColor);
+		textBg->setPosition(scalingHeight * 0.6, h * 0.5 - scalingHeight * 0.2);
+		this->addChild(textBg, 1);
+		textBg->setOpacity(138);
+
+		Label* l = Label::createWithTTF("165.0", "fonts/trench100free.otf",
+				fontSize);
+		l->setTextColor(Color4B::BLACK);
+		l->enableOutline(Color4B::BLACK, fontSize * 0.05);
+		l->setPosition(textBg->getPosition());
+		this->addChild(l, 2);
+	}
+
+	{ // Date
+		Sprite* textBg = Sprite::create("text_bg.png");
+		textBg->setScaleX(
+				scalingHeight * 0.22 / textBg->getContentSize().height);
+		textBg->setScaleY(
+				scalingHeight * 0.1 / textBg->getContentSize().height);
+		textBg->setColor(dateColor);
+		textBg->setPosition(scalingHeight * 0.5,
+				h * 0.5 - scalingHeight * 0.32);
+		this->addChild(textBg, 1);
+		textBg->setOpacity(138);
+
+		Label* l = Label::createWithTTF("June 28", "fonts/trench100free.otf",
+				fontSize);
+		l->setTextColor(Color4B::BLACK);
+		l->enableOutline(Color4B::BLACK, fontSize * 0.05);
+		l->setPosition(textBg->getPosition());
+		this->addChild(l, 2);
+	}
+
+	{
+		Sprite* textBg = Sprite::create("text_bg.png");
+		textBg->setScaleX(
+				scalingHeight * 0.22 / textBg->getContentSize().height);
+		textBg->setScaleY(
+				scalingHeight * 0.1 / textBg->getContentSize().height);
+		textBg->setColor(timeColor);
+		textBg->setPosition(scalingHeight * 0.5,
+				h * 0.5 - scalingHeight * 0.44);
+		this->addChild(textBg, 1);
+		textBg->setOpacity(138);
+
+		Label* l = Label::createWithTTF("12:56 pm", "fonts/trench100free.otf",
+				fontSize);
+		l->setTextColor(Color4B::BLACK);
+		l->enableOutline(Color4B::BLACK, fontSize * 0.05);
+		l->setPosition(textBg->getPosition());
+		this->addChild(l, 2);
+	}
+
+	Label* lAz = Label::createWithTTF("Sun Azimuth", "fonts/trench100free.otf",
+			fontSize);
+	lAz->setTextColor(Color4B::BLACK);
+	lAz->setAnchorPoint(Vec2(1, 0.5));
+	lAz->enableOutline(Color4B::BLACK, fontSize * 0.05);
+	lAz->setPosition(w - scalingHeight * 0.5, h * 0.5 - scalingHeight * 0.2);
+	this->addChild(lAz, 2);
+
+	{ // sun az
+		Sprite* textBg = Sprite::create("text_bg.png");
+		textBg->setScale(scalingHeight * 0.08 / textBg->getContentSize().height);
+		textBg->setColor(Color3B(255, 178, 55));
+		textBg->setPosition(w - scalingHeight * 0.4,
+				h * 0.5 - scalingHeight * 0.2);
+		this->addChild(textBg, 1);
+		textBg->setOpacity(166);
+
+		Label* l = Label::createWithTTF("145.0", "fonts/trench100free.otf",
+				fontSize);
+		l->setTextColor(Color4B::BLACK);
+		l->enableOutline(Color4B::BLACK, fontSize * 0.05);
+		l->setPosition(textBg->getPosition());
+		this->addChild(l, 2);
+	}
+
+	Label* lElv = Label::createWithTTF("Sun Elevation",
+			"fonts/trench100free.otf", fontSize);
+	lElv->setTextColor(Color4B::BLACK);
+	lElv->setAnchorPoint(Vec2(1, 0.5));
+	lElv->enableOutline(Color4B::BLACK, fontSize * 0.05);
+	lElv->setPosition(w - scalingHeight * 0.5, h * 0.5 - scalingHeight * 0.3);
+	this->addChild(lElv, 2);
+
+
+
+	{ // sun elevation
+		Sprite* textBg = Sprite::create("text_bg.png");
+		textBg->setScale(scalingHeight * 0.08 / textBg->getContentSize().height);
+		textBg->setColor(Color3B(255, 178, 55));
+		textBg->setPosition(w - scalingHeight * 0.4, h * 0.5 - scalingHeight * 0.3);
+		this->addChild(textBg, 1);
+		textBg->setOpacity(166);
+
+		Label* l = Label::createWithTTF("63.5", "fonts/trench100free.otf",
+				fontSize);
+		l->setTextColor(Color4B::BLACK);
+		l->enableOutline(Color4B::BLACK, fontSize * 0.05);
+		l->setPosition(textBg->getPosition());
+		this->addChild(l, 2);
+	}
+
+
+	shadow = Sprite::create("shadow.png");
 	shadow->setAnchorPoint(Vec2(0.0, 0.5));
 	shadow->setScaleX(
 			platform->getContentSize().width * 0.5
@@ -61,7 +203,7 @@ bool LayerMain::init() {
 	shadow->runAction(RotateBy::create(30, 3600));
 	platform->addChild(shadow, 1);
 
-	Sprite* sun = Sprite::create("sun.png");
+	sun = Sprite::create("sun.png");
 	float sunDist = platform->getContentSize().height * 0.5;
 	sun->setPosition(0, sunDist);
 	sun->runAction(RotateBy::create(90, 3600));
@@ -75,24 +217,20 @@ bool LayerMain::init() {
 	float sideGap = w * 0.03f;
 	float thickness = w * 0.007f;
 
-	SliderControl * azSlider = SliderControl::create(Size(w * 0.8, thickness),
-			180, Color3B(255, 32, 32));
+	azSlider = SliderControl::create(Size(w * 0.8, thickness), 180, longColor);
 	azSlider->setPosition(w * 0.5, sideGap);
 	this->addChild(azSlider, 10);
 
-	SliderControl * latSlider = SliderControl::create(Size(h * 0.9, thickness),
-			90, Color3B(22, 196, 52));
+	latSlider = SliderControl::create(Size(h * 0.9, thickness), 90, latColor);
 	latSlider->setRotation(90);
 	latSlider->setPosition(sideGap, h * 0.5);
 	this->addChild(latSlider, 20);
 
-	SliderControl * dateSlider = SliderControl::create(Size(w * 0.8, thickness),
-			1, Color3B(239, 32, 155));
+	dateSlider = SliderControl::create(Size(w * 0.8, thickness), 1, dateColor);
 	dateSlider->setPosition(w * 0.5, h - sideGap);
 	this->addChild(dateSlider, 30);
 
-	SliderControl * timeSlider = SliderControl::create(Size(h * 0.9, thickness),
-			1, Color3B(22, 131, 196));
+	timeSlider = SliderControl::create(Size(h * 0.9, thickness), 1, timeColor);
 	timeSlider->setRotation(90);
 	timeSlider->setPosition(w - sideGap, h * 0.5);
 	this->addChild(timeSlider, 40);
@@ -113,3 +251,6 @@ void LayerMain::onKeyReleased(EventKeyboard::KeyCode keyCode, Event* event) {
 	}
 }
 
+void LayerMain::updateValues(float dt) {
+	star->setPosition(azSlider->getValue(), latSlider->getValue());
+}

@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include "cocos2d.h"
+#include "SliderControl.h"
 
 using namespace cocos2d;
 
@@ -20,10 +21,13 @@ public:
 	CREATE_FUNC(LayerMain)
 	;
 
-
 	static LayerMain* pInstance;
 
 private:
+	void updateValues(float dt);
+
+	Sprite *sun, *shadow, *star;
+	SliderControl *azSlider, *latSlider, *dateSlider, *timeSlider;
 
 };
 
