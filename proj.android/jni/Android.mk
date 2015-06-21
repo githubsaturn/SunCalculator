@@ -25,7 +25,7 @@ LOCAL_SRC_FILES += $(CLASSES_FILES)
 
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../Classes
-# LOCAL_C_INCLUDES += $(LOCAL_PATH)/../../Classes/Helpers
+LOCAL_C_INCLUDES += $(LOCAL_PATH)/../../Classes/Helpers
 # LOCAL_C_INCLUDES += $(LOCAL_PATH)/../../Classes/Social
 # LOCAL_C_INCLUDES += $(LOCAL_PATH)/../../Classes/Layers
 # LOCAL_C_INCLUDES += $(LOCAL_PATH)/../../Classes/Game

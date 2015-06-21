@@ -1,7 +1,6 @@
 #include "AppManager.h"
 #include "AppConstants.h"
-#include "cocos2d.h"
-//#include "Serializer.h"
+#include "SliderControl.h"
 
 USING_NS_CC;
 
@@ -88,8 +87,9 @@ void AppManager::runScene(int scenceID) {
 
 	if (scenceID == kSceneSplash) {
 
-		auto sprite = Sprite::create("HelloWorld.png");
-		mainNode->addChild(sprite, 10);
+		SliderControl * sp = SliderControl::create();
+		sp->setPosition(300, 300);
+		mainNode->addChild(sp, 10);
 
 	} else if (scenceID == kSceneMain) {
 
@@ -157,7 +157,7 @@ double AppManager::getTimeNow() {
 
 void AppManager::rotateScreen() {
 	isLandscapeMode = !isLandscapeMode;
-	runScene (kSceneMain);
+	runScene(kSceneMain);
 }
 
 void AppManager::saveData() {
