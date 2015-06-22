@@ -34,67 +34,6 @@ bool LayerMain::init() {
 	daysInMonth[i++] = 30;
 	daysInMonth[i++] = 31;
 
-	{
-		spa_data spa; //declare the SPA structure
-		int result;
-		float min, sec;
-
-		//enter required input values into SPA structure
-
-		spa.year = 2015;
-		spa.month = 3;
-		spa.day = 2;
-		spa.hour = 12;
-		spa.minute = 30;
-		spa.second = 30;
-		spa.timezone = -7.0;
-		spa.delta_ut1 = 0;
-		spa.delta_t = 67;
-		spa.longitude = -105.1786;
-		spa.latitude = 39.742476;
-		spa.elevation = 1000.14;
-		spa.pressure = 1013;
-		spa.temperature = 22;
-		spa.slope = 0;
-		spa.azm_rotation = -10;
-		spa.atmos_refract = 0.5667;
-		spa.function = SPA_ZA; //SPA_ALL
-
-		//call the SPA calculate function and pass the SPA structure
-
-		result = spa_calculate(&spa);
-
-		if (result == 0) //check for SPA errors
-				{
-			//display the results inside the SPA structure
-
-			log("Julian Day:    %.6f\n", spa.jd);
-			log("L:             %.6e degrees\n", spa.l);
-			log("B:             %.6e degrees\n", spa.b);
-			log("R:             %.6f AU\n", spa.r);
-			log("H:             %.6f degrees\n", spa.h);
-			log("Delta Psi:     %.6e degrees\n", spa.del_psi);
-			log("Delta Epsilon: %.6e degrees\n", spa.del_epsilon);
-			log("Epsilon:       %.6f degrees\n", spa.epsilon);
-			log("Zenith:        %.6f degrees\n", spa.zenith);
-			log("Azimuth:       %.6f degrees\n", spa.azimuth);
-			log("Incidence:     %.6f degrees\n", spa.incidence);
-
-			min = 60.0 * (spa.sunrise - (int) (spa.sunrise));
-			sec = 60.0 * (min - (int) min);
-			log("Sunrise:       %02d:%02d:%02d Local Time\n",
-					(int) (spa.sunrise), (int) min, (int) sec);
-
-			min = 60.0 * (spa.sunset - (int) (spa.sunset));
-			sec = 60.0 * (min - (int) min);
-			log("Sunset:        %02d:%02d:%02d Local Time\n",
-					(int) (spa.sunset), (int) min, (int) sec);
-
-		} else
-			log("SPA Error Code: %d\n", result);
-
-	}
-
 	Size visibleSize = AppManager::getInstance()->getVisibleSize();
 	Point origin = AppManager::getInstance()->getOrigin();
 	float w = visibleSize.width;
@@ -112,8 +51,7 @@ bool LayerMain::init() {
 	bg->setColor(Color3B(244, 244, 244));
 
 	countries = Sprite::create("countries_.png");
-	countries->setAnchorPoint(Vec2(-0.1, 1.2));
-	countries->setPosition(0, h);
+	countries->setPosition(scalingHeight * 0.55, h * 0.75);
 	countries->setScale(
 			scalingHeight * 0.4 / countries->getContentSize().height);
 	countries->setOpacity(73);
@@ -131,10 +69,9 @@ bool LayerMain::init() {
 	Label* lLoc = Label::createWithTTF("Latitude    Longitude",
 			"fonts/trench100free.otf", fontSize);
 	lLoc->setTextColor(Color4B::BLACK);
-	lLoc->setAnchorPoint(Vec2(0.5, 0.5));
+	lLoc->setAnchorPoint(Vec2(0.0, 0.5));
 	lLoc->enableOutline(Color4B::BLACK, fontSize * 0.05);
-	lLoc->setPosition(w * 0.5 - scalingHeight * 0.5,
-			h * 0.5 + scalingHeight * 0.0);
+	lLoc->setPosition(scalingHeight * 0.3, h * 0.5 + scalingHeight * 0.05);
 	this->addChild(lLoc, 1);
 
 	Color3B longColor(255, 32, 32);
@@ -142,19 +79,14 @@ bool LayerMain::init() {
 	Color3B timeColor(22, 131, 196);
 	Color3B dateColor(239, 32, 155);
 
-	Sprite* platform = Sprite::create("platform.png");
-	platform->setPosition(w - scalingHeight * 0.3,
-			h * 0.5 + scalingHeight * 0.2);
-	platform->setScale(scalingHeight * 0.4 / platform->getContentSize().height);
-	this->addChild(platform, 1);
-
 	{ // latitude
 		Node* textBg = ui::Scale9Sprite::create("text_bg.png");
 		float textBgHeight = textBg->getContentSize().height;
-		textBg->setContentSize(Size(textBgHeight * 1.5, textBgHeight));
+		textBg->setContentSize(Size(textBgHeight * 2.5, textBgHeight));
 		textBg->setScale(scalingHeight * 0.1 / textBg->getContentSize().height);
 		textBg->setColor(latColor);
-		textBg->setPosition(scalingHeight * 0.4, h * 0.5 - scalingHeight * 0.1);
+		textBg->setPosition(scalingHeight * 0.42,
+				h * 0.5 - scalingHeight * 0.05);
 		this->addChild(textBg, 1);
 		textBg->setOpacity(138);
 
@@ -170,10 +102,11 @@ bool LayerMain::init() {
 	{ // Longitude
 		Node* textBg = ui::Scale9Sprite::create("text_bg.png");
 		float textBgHeight = textBg->getContentSize().height;
-		textBg->setContentSize(Size(textBgHeight * 1.5, textBgHeight));
+		textBg->setContentSize(Size(textBgHeight * 2.5, textBgHeight));
 		textBg->setScale(scalingHeight * 0.1 / textBg->getContentSize().height);
 		textBg->setColor(longColor);
-		textBg->setPosition(scalingHeight * 0.6, h * 0.5 - scalingHeight * 0.1);
+		textBg->setPosition(scalingHeight * 0.72,
+				h * 0.5 - scalingHeight * 0.05);
 		this->addChild(textBg, 1);
 		textBg->setOpacity(138);
 
@@ -190,11 +123,11 @@ bool LayerMain::init() {
 
 		Node* textBg = ui::Scale9Sprite::create("text_bg.png");
 		float textBgHeight = textBg->getContentSize().height;
-		textBg->setContentSize(Size(textBgHeight * 3.5, textBgHeight));
+		textBg->setContentSize(Size(textBgHeight * 5.5, textBgHeight));
 		textBg->setScale(scalingHeight * 0.1 / textBg->getContentSize().height);
 		textBg->setColor(dateColor);
-		textBg->setPosition(scalingHeight * 0.5,
-				h * 0.5 - scalingHeight * 0.22);
+		textBg->setPosition(scalingHeight * 0.57,
+				h * 0.5 - scalingHeight * 0.17);
 		this->addChild(textBg, 1);
 		textBg->setOpacity(138);
 
@@ -210,11 +143,11 @@ bool LayerMain::init() {
 	{ //time
 		Node* textBg = ui::Scale9Sprite::create("text_bg.png");
 		float textBgHeight = textBg->getContentSize().height;
-		textBg->setContentSize(Size(textBgHeight * 3.5, textBgHeight));
+		textBg->setContentSize(Size(textBgHeight * 5.5, textBgHeight));
 		textBg->setScale(scalingHeight * 0.1 / textBg->getContentSize().height);
 		textBg->setColor(timeColor);
-		textBg->setPosition(scalingHeight * 0.5,
-				h * 0.5 - scalingHeight * 0.34);
+		textBg->setPosition(scalingHeight * 0.57,
+				h * 0.5 - scalingHeight * 0.29);
 		this->addChild(textBg, 1);
 		textBg->setOpacity(138);
 
@@ -230,11 +163,11 @@ bool LayerMain::init() {
 	{ //time zone
 		Node* textBg = ui::Scale9Sprite::create("text_bg.png");
 		float textBgHeight = textBg->getContentSize().height;
-		textBg->setContentSize(Size(textBgHeight * 4.5, textBgHeight));
+		textBg->setContentSize(Size(textBgHeight * 5.5, textBgHeight));
 		textBg->setScale(scalingHeight * 0.1 / textBg->getContentSize().height);
 		textBg->setColor(timeColor);
-		textBg->setPosition(scalingHeight * 0.5,
-				h * 0.5 - scalingHeight * 0.48);
+		textBg->setPosition(scalingHeight * 0.57,
+				h * 0.5 - scalingHeight * 0.41);
 		this->addChild(textBg, 1);
 		textBg->setOpacity(138);
 
@@ -252,18 +185,18 @@ bool LayerMain::init() {
 	lAz->setTextColor(Color4B::BLACK);
 	lAz->setAnchorPoint(Vec2(1, 0.5));
 	lAz->enableOutline(Color4B::BLACK, fontSize * 0.05);
-	lAz->setPosition(w - scalingHeight * 0.5, h * 0.5 - scalingHeight * 0.2);
+	lAz->setPosition(w - scalingHeight * 0.5, h * 0.5 - scalingHeight * 0.41);
 	this->addChild(lAz, 2);
 
 	{ // sun az
 		Node* textBg = ui::Scale9Sprite::create("text_bg.png");
 		float textBgHeight = textBg->getContentSize().height;
-		textBg->setContentSize(Size(textBgHeight * 2.5, textBgHeight));
+		textBg->setContentSize(Size(textBgHeight * 3.0, textBgHeight));
 		textBg->setScale(
 				scalingHeight * 0.08 / textBg->getContentSize().height);
 		textBg->setColor(Color3B(255, 178, 55));
-		textBg->setPosition(w - scalingHeight * 0.4,
-				h * 0.5 - scalingHeight * 0.2);
+		textBg->setPosition(w - scalingHeight * 0.36, h * 0.5 - scalingHeight * 0.41);
+
 		this->addChild(textBg, 1);
 		textBg->setOpacity(166);
 
@@ -281,18 +214,17 @@ bool LayerMain::init() {
 	lElv->setTextColor(Color4B::BLACK);
 	lElv->setAnchorPoint(Vec2(1, 0.5));
 	lElv->enableOutline(Color4B::BLACK, fontSize * 0.05);
-	lElv->setPosition(w - scalingHeight * 0.5, h * 0.5 - scalingHeight * 0.3);
+	lElv->setPosition(w - scalingHeight * 0.5, h * 0.5 - scalingHeight * 0.29);
 	this->addChild(lElv, 2);
 
 	{ // sun elevation
 		Node* textBg = ui::Scale9Sprite::create("text_bg.png");
 		float textBgHeight = textBg->getContentSize().height;
-		textBg->setContentSize(Size(textBgHeight * 2.5, textBgHeight));
+		textBg->setContentSize(Size(textBgHeight * 3.0, textBgHeight));
 		textBg->setScale(
 				scalingHeight * 0.08 / textBg->getContentSize().height);
 		textBg->setColor(Color3B(255, 178, 55));
-		textBg->setPosition(w - scalingHeight * 0.4,
-				h * 0.5 - scalingHeight * 0.3);
+		textBg->setPosition(w - scalingHeight * 0.36, h * 0.5 - scalingHeight * 0.29);
 		this->addChild(textBg, 1);
 		textBg->setOpacity(166);
 
@@ -304,6 +236,12 @@ bool LayerMain::init() {
 		this->addChild(l, 2);
 		labelElv = l;
 	}
+
+	Sprite* platform = Sprite::create("platform.png");
+	platform->setPosition(w - scalingHeight * 0.5,
+			h * 0.5 + scalingHeight * 0.15);
+	platform->setScale(scalingHeight * 0.6 / platform->getContentSize().height);
+	this->addChild(platform, 1);
 
 	shadow = Sprite::create("shadow.png");
 	shadow->setAnchorPoint(Vec2(0.0, 0.5));
