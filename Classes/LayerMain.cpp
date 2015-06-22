@@ -264,10 +264,10 @@ bool LayerMain::init() {
 	float sideGap = w * 0.03f;
 	float thickness = w * 0.007f;
 
-	azSlider = SliderControl::create(Size(w * 0.8, thickness), 179.9,
+	longSlider = SliderControl::create(Size(w * 0.8, thickness), 179.9,
 			longColor);
-	azSlider->setPosition(w * 0.5, sideGap);
-	this->addChild(azSlider, 10);
+	longSlider->setPosition(w * 0.5, h - sideGap);
+	this->addChild(longSlider, 10);
 
 	latSlider = SliderControl::create(Size(h * 0.9, thickness), 80, latColor);
 	latSlider->setRotation(-90);
@@ -275,7 +275,7 @@ bool LayerMain::init() {
 	this->addChild(latSlider, 20);
 
 	dateSlider = SliderControl::create(Size(w * 0.8, thickness), 1, dateColor);
-	dateSlider->setPosition(w * 0.5, h - sideGap);
+	dateSlider->setPosition(w * 0.5, sideGap);
 	this->addChild(dateSlider, 30);
 
 	timeSlider = SliderControl::create(Size(h * 0.9, thickness), 1, timeColor);
@@ -301,7 +301,7 @@ void LayerMain::onKeyReleased(EventKeyboard::KeyCode keyCode, Event* event) {
 
 void LayerMain::updateValues(float dt) {
 
-	float longitude = azSlider->getValue();
+	float longitude = longSlider->getValue();
 	float latitude = latSlider->getValue();
 
 	int assumedTimeZone = longitude * 12 / 180;

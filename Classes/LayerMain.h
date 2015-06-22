@@ -27,7 +27,7 @@ private:
 	void updateValues(float dt);
 
 	Sprite *sun, *shadow, *star, *countries;
-	SliderControl *azSlider, *latSlider, *dateSlider, *timeSlider;
+	SliderControl *longSlider, *latSlider, *dateSlider, *timeSlider;
 
 	Label *labelLat, *labelLong, *labelDate, *labelTime, *labelTimeZone,
 			*labelAz, *labelElv;
