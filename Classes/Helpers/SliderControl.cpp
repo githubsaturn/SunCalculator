@@ -83,7 +83,8 @@ bool SliderControl::onTouchBegan(Touch *touch, Event *unused_event) {
 	if ((abs(newX) < size.width * 0.5) && (abs(newY) < size.height * 4)) {
 		listener->setSwallowTouches(true);
 		hub->stopAllActions();
-		hub->runAction(EaseSineOut::create(ScaleTo::create(0.2f, hubScale * 1.7)));
+		hub->runAction(
+				EaseSineOut::create(ScaleTo::create(0.2f, hubScale * 1.7)));
 	}
 
 	return true;
@@ -100,8 +101,14 @@ void SliderControl::onTouchMoved(Touch *touch, Event *unused_event) {
 
 	float newX = this->convertTouchToNodeSpace(touch).x;
 
-	if (abs(newX) <= xLimit)
-		hub->setPositionX(newX);
+	if (newX > xLimit) {
+		newX = xLimit;
+	} else if (newX < -xLimit) {
+		newX = -xLimit;
+	}
+
+	hub->setPositionX(newX);
+
 }
 
 void SliderControl::onTouchEnded(Touch *touch, Event *unused_event) {

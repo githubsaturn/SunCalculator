@@ -26,8 +26,14 @@ public:
 private:
 	void updateValues(float dt);
 
-	Sprite *sun, *shadow, *star;
+	Sprite *sun, *shadow, *star, *countries;
 	SliderControl *azSlider, *latSlider, *dateSlider, *timeSlider;
+
+	Label *labelLat, *labellong, *labelDate, *labelTime, *lableTimeZone,
+			*labelAz, *labelElv;
+	float sunDist;
+	float shadowScale;
+	int daysInMonth[12];
 
 };
 
