@@ -183,7 +183,7 @@ bool LayerMain::init() {
 		l->enableOutline(Color4B::BLACK, fontSize * 0.05);
 		l->setPosition(textBg->getPosition());
 		this->addChild(l, 2);
-		labellong = l;
+		labelLong = l;
 	}
 
 	{ // Date
@@ -244,7 +244,7 @@ bool LayerMain::init() {
 		l->enableOutline(Color4B::BLACK, fontSize * 0.05);
 		l->setPosition(textBg->getPosition());
 		this->addChild(l, 2);
-		lableTimeZone = l;
+		labelTimeZone = l;
 	}
 
 	Label* lAz = Label::createWithTTF("Sun Azimuth", "fonts/trench100free.otf",
@@ -402,7 +402,7 @@ void LayerMain::updateValues(float dt) {
 	std::string azStr = "--";
 	std::string elvStr = "--";
 	std::string dateStr("--");
-	std::string timeStr = to_string(hour) + ":" + to_string(minute) + " gmt";
+	std::string timeStr = to_string(hour) + ":" + to_string(minute);
 
 	spa_data spa; //declare the SPA structure
 
@@ -487,7 +487,7 @@ void LayerMain::updateValues(float dt) {
 	dateStr = dateStr + " " + to_string(day);
 
 	labelLat->setString(latStr);
-	labellong->setString(longStr);
+	labelLong->setString(longStr);
 
 	labelDate->setString(dateStr);
 	labelTime->setString(timeStr);
@@ -495,7 +495,10 @@ void LayerMain::updateValues(float dt) {
 	labelAz->setString(azStr);
 	labelElv->setString(elvStr);
 
-	lableTimeZone->setString("Time Zone:  " + to_string(assumedTimeZone));
+	if (assumedTimeZone < 0)
+		labelTimeZone->setString("Time Zone:  " + to_string(assumedTimeZone));
+	else
+		labelTimeZone->setString("Time Zone:  +" + to_string(assumedTimeZone));
 
 	float s = sin(-spa.azimuth * 3.1415 / 180.0);
 	float c = cos(-spa.azimuth * 3.1415 / 180.0);

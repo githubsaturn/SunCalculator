@@ -29,7 +29,7 @@ private:
 	Sprite *sun, *shadow, *star, *countries;
 	SliderControl *azSlider, *latSlider, *dateSlider, *timeSlider;
 
-	Label *labelLat, *labellong, *labelDate, *labelTime, *lableTimeZone,
+	Label *labelLat, *labelLong, *labelDate, *labelTime, *labelTimeZone,
 			*labelAz, *labelElv;
 	float sunDist;
 	float shadowScale;
