@@ -438,11 +438,11 @@ void LayerMain::updateValues(float dt) {
 	else
 		labelTimeZone->setString("Time Zone:  +" + to_string(assumedTimeZone));
 
-	float s = sin(-spa.azimuth * 3.1415 / 180.0);
-	float c = cos(-spa.azimuth * 3.1415 / 180.0);
+	float s = sin(spa.azimuth * 3.1415 / 180.0);
+	float c = cos(spa.azimuth * 3.1415 / 180.0);
 
 	sun->setPosition(sunDist + sunDist * s, sunDist + sunDist * c);
-	shadow->setRotation(-spa.azimuth + 90);
+	shadow->setRotation(spa.azimuth + 90);
 	if (spa.zenith < 90) {
 		shadow->setScaleX(spa.zenith * shadowScale / 80);
 		sun->setColor(Color3B::WHITE);
