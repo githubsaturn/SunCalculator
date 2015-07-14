@@ -1,6 +1,7 @@
 #include "AppManager.h"
 #include "AppConstants.h"
 #include "LayerMain.h"
+#include "LayerSplash.h"
 
 USING_NS_CC;
 
@@ -87,25 +88,13 @@ void AppManager::runScene(int scenceID) {
 
 	if (scenceID == kSceneSplash) {
 
-		auto layerMain = LayerMain::create();
-		mainNode->addChild(layerMain, 10);
+		auto layerSplash = LayerSplash::create();
+		mainNode->addChild(layerSplash, 10);
 
 	} else if (scenceID == kSceneMain) {
 
-//		auto layer_buttons = LayerMainMenuButtons::create();
-//		auto layer_fb = LayerFacebook::create();
-//		auto layer_connect_phone = LayerConnectToPhone::create();
-//		auto layer_rank = LayerRanking::create();
-//		auto layer_share = LayerShare::create();
-//
-//		auto layer_background = LiveBackground::create(0);
-//		mainNode->addChild(layer_background, 10);
-//		mainNode->addChild(layer_buttons, 20);
-//		mainNode->addChild(layer_rank, 25);
-//		mainNode->addChild(layer_fb, 40);
-//		mainNode->addChild(layer_connect_phone, 50);
-//		mainNode->addChild(layer_share, 60);
-
+		auto layerMain = LayerMain::create();
+		mainNode->addChild(layerMain, 10);
 	}
 
 	auto director = Director::getInstance();
@@ -163,8 +152,8 @@ void AppManager::saveData() {
 
 	UserDefault* def = UserDefault::getInstance();
 
+	// sample snippet on how to save data
 	//def->setBoolForKey(KEY_IS_SOUND_MUTE, SoundManager::getInstance()->getMuteSFX());
-
 	//def->flush();
 
 	log("_____ SAVING DATA DONE");
@@ -174,8 +163,11 @@ void AppManager::saveData() {
 void AppManager::loadLocalData() {
 
 	UserDefault* def = UserDefault::getInstance();
+
+	// sample snippet on how to load data
 	//SoundManager::getInstance()->muteSoundFX(def->getBoolForKey(KEY_IS_SOUND_MUTE));
 }
+
 cocos2d::Point AppManager::getOrigin() {
 
 	return Director::getInstance()->getVisibleOrigin();
