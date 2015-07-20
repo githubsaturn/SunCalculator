@@ -11,3 +11,6 @@ No GPS permission or other is required. Everything is manually entered.
 
 
 In order to run, clone this repo, then follow build tutorial on [Cocos2dx website](http://www.cocos2d-x.org/). Note that this app uses cocos2d-x-3.4 Jan.30 2015.
+
+
+You can download the app from [Google Play](http://play.google.com/store/apps/details?id=com.itskasra.suncalculator).
